@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BudgetProvider } from '../../context/BudgetContext'
+import { BudgetProvider, useBudget } from '../../context/BudgetContext'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
 import Dashboard from '../../pages/Dashboard'
@@ -7,6 +7,7 @@ import Transactions from '../../pages/Transactions'
 import Budgets from '../../pages/Budgets'
 import Insights from '../../pages/Insights'
 import Settings from '../../pages/Settings'
+import LoginPage from '../../pages/LoginPage'
 import Toast from '../ui/Toast'
 
 import AddTransaction from '../../pages/AddTransaction'
@@ -20,12 +21,22 @@ const titles = {
   settings: 'Settings',
 }
 
-export default function Layout() {
+function MainLayout() {
+  const { isLoggedIn } = useBudget()
   const [page, setPage] = useState('dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [toast, setToast] = useState(null)
 
   const showToast = (message, tone = 'success') => setToast({ message, tone })
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <LoginPage showToast={showToast} />
+        <Toast toast={toast} onClose={() => setToast(null)} />
+      </>
+    )
+  }
 
   const content = {
     dashboard: <Dashboard showToast={showToast} onNavigate={setPage} />,
@@ -37,19 +48,25 @@ export default function Layout() {
   }
 
   return (
-    <BudgetProvider>
-      <div className="flex min-h-screen">
-        <Sidebar page={page} setPage={setPage} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <Topbar pageTitle={titles[page]} onMenu={() => setSidebarOpen(true)} showToast={showToast} />
-          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-            <div key={page} className="fade-in mx-auto max-w-7xl">
-              {content[page]}
-            </div>
-          </main>
-        </div>
+    <div className="flex min-h-screen">
+      <Sidebar page={page} setPage={setPage} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Topbar pageTitle={titles[page]} onMenu={() => setSidebarOpen(true)} showToast={showToast} />
+        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+          <div key={page} className="fade-in mx-auto max-w-7xl">
+            {content[page]}
+          </div>
+        </main>
       </div>
       <Toast toast={toast} onClose={() => setToast(null)} />
+    </div>
+  )
+}
+
+export default function Layout() {
+  return (
+    <BudgetProvider>
+      <MainLayout />
     </BudgetProvider>
   )
 }

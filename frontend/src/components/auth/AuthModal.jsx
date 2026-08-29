@@ -13,41 +13,56 @@ export default function AuthModal({ open, onClose, initialMode = 'login', showTo
     password: '',
     salary: '50000',
   })
+  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
+
     if (!form.email.trim() || !form.password) {
       return setError('Please fill in all required fields.')
     }
 
-    if (mode === 'register') {
-      if (!form.name.trim()) return setError('Please enter your full name.')
-      updateProfile({
-        name: form.name.trim(),
-        email: form.email.trim(),
-        currency: 'INR',
-        monthlySalary: parseFloat(form.salary) || 0,
-        startingBalance: 0,
-        role: 'Personal Account',
-        avatarColor: 'from-emerald-400 to-cyan-500',
-        notifications: {
-          budgetAlerts: true,
-          monthlySummary: true,
-          tips: true,
-          marketing: false,
-        },
-      })
-      login()
-      if (showToast) showToast(`Welcome ${form.name.trim()}! Account created successfully.`)
-    } else {
-      login()
-      if (showToast) showToast('Logged in successfully!')
-    }
+    try {
+      setSubmitting(true)
+      const endpoint = mode === 'register' ? '/api/auth/register' : '/api/auth/login'
+      const payload = mode === 'register' 
+        ? { name: form.name, email: form.email, password: form.password, salary: form.salary }
+        : { email: form.email, password: form.password }
 
-    onClose()
+      const res = await fetch(`http://localhost:5000${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Authentication failed')
+      }
+
+      updateProfile({
+        name: data.user.name,
+        email: data.user.email,
+        monthlySalary: data.user.monthlySalary || parseFloat(form.salary) || 0,
+      })
+
+      login(data.user)
+
+      if (showToast) {
+        showToast(mode === 'register' ? `Welcome ${data.user.name}! Account registered in MongoDB.` : `Welcome back ${data.user.name}! Logged in.`)
+      }
+
+      onClose()
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -116,8 +131,10 @@ export default function AuthModal({ open, onClose, initialMode = 'login', showTo
 
         {error && <p className="rounded-xl bg-red-500/10 px-3.5 py-2 text-xs font-semibold text-red-400">{error}</p>}
 
-        <button type="submit" className="btn-primary w-full py-3">
-          {mode === 'register' ? (
+        <button type="submit" disabled={submitting} className="btn-primary w-full py-3 disabled:opacity-50">
+          {submitting ? (
+            'Please wait...'
+          ) : mode === 'register' ? (
             <>
               <UserPlus size={16} /> Register Account
             </>

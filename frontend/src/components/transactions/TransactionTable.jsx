@@ -54,20 +54,20 @@ export default function TransactionTable({ transactions, currency, onEdit, onDel
                         {income ? '+' : '−'}
                         {fmtMoney(t.amount, currency)}
                       </p>
-                      <div className="flex gap-1 opacity-0 transition group-hover:opacity-100">
+                      <div className="flex items-center gap-1">
                         <button
                           onClick={() => onEdit(t)}
-                          className="rounded-lg p-1.5 text-ink-3 transition hover:bg-white/5 hover:text-slate-100"
+                          className="rounded-lg p-1.5 text-ink-3 transition hover:bg-white/10 hover:text-slate-100"
                           aria-label="Edit"
                         >
-                          <Pencil size={14} />
+                          <Pencil size={15} />
                         </button>
                         <button
-                          onClick={() => onDelete(t)}
-                          className="rounded-lg p-1.5 text-ink-3 transition hover:bg-red-500/10 hover:text-red-400"
+                          onClick={() => onDelete(t.id || t)}
+                          className="rounded-lg p-1.5 text-red-400/80 transition hover:bg-red-500/20 hover:text-red-400"
                           aria-label="Delete"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={15} />
                         </button>
                       </div>
                     </div>

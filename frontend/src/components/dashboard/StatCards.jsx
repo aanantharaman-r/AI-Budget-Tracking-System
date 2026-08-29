@@ -25,7 +25,7 @@ function StatCard({ label, value, sub, icon: Icon, iconClass, accent, action }) 
 export default function StatCards({ showToast }) {
   const { stats, profile, updateSalary } = useBudget()
   const { balance, income, expense, savings, savingsRate, monthlySalary, otherIncome } = stats
-  const c = profile.currency
+  const c = profile?.currency || 'INR'
 
   const [editingSalary, setEditingSalary] = useState(false)
   const [salaryVal, setSalaryVal] = useState(String(profile.monthlySalary || 0))

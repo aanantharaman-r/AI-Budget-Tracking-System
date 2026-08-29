@@ -52,9 +52,9 @@ export default function Topbar({ pageTitle, query, setQuery, onMenu, showToast }
 
           <button className="flex items-center gap-2 rounded-xl border border-line bg-card py-1.5 pl-1.5 pr-3 transition hover:bg-card-2">
             <span
-              className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${profile.avatarColor} text-xs font-bold text-white`}
+              className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${profile?.avatarColor || 'from-emerald-400 to-cyan-500'} text-xs font-bold text-white`}
             >
-              {profile.name
+              {(profile?.name || 'Guest User')
                 .split(' ')
                 .map((n) => n[0])
                 .join('')}

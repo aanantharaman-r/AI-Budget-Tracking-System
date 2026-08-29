@@ -38,7 +38,8 @@ export default function RecentTransactions({ onViewAll }) {
         {recent.length === 0 && <EmptyState title="No transactions yet" />}
         {recent.map((t) => {
           const cat = categoryById[t.categoryId]
-          const income = t.type === 'income'
+          const isIncome = t.type === 'income'
+          const currency = profile?.currency || 'INR'
           return (
             <button
               key={t.id}
@@ -57,9 +58,9 @@ export default function RecentTransactions({ onViewAll }) {
                   {cat.name} · {fmtDate(t.date)}
                 </p>
               </div>
-              <p className={`text-sm font-semibold tabular-nums ${income ? 'text-emerald-400' : 'text-slate-100'}`}>
-                {income ? '+' : '−'}
-                {fmtMoney(t.amount, profile.currency)}
+              <p className={`text-sm font-semibold tabular-nums ${isIncome ? 'text-emerald-400' : 'text-slate-100'}`}>
+                {isIncome ? '+' : '−'}
+                {fmtMoney(t.amount, currency)}
               </p>
             </button>
           )

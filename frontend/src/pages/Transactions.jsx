@@ -7,7 +7,7 @@ import TransactionTable from '../components/transactions/TransactionTable'
 import TransactionModal from '../components/transactions/TransactionModal'
 import Badge from '../components/ui/Badge'
 
-export default function Transactions({ showToast }) {
+export default function Transactions({ showToast, onNavigate }) {
   const { transactions, profile, addTransaction, updateTransaction, deleteTransaction } = useBudget()
   const [filters, setFilters] = useState({ query: '', category: 'all', type: 'all' })
   const [modalOpen, setModalOpen] = useState(false)
@@ -45,7 +45,8 @@ export default function Transactions({ showToast }) {
     }
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (target) => {
+    const id = typeof target === 'object' && target !== null ? target.id : target
     deleteTransaction(id)
     showToast('Transaction deleted', 'info')
   }
