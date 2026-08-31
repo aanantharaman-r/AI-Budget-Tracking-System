@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Bell, Menu, Search, LogIn, LogOut, UserPlus } from 'lucide-react'
+import { Search, LogIn, UserPlus, Wallet } from 'lucide-react'
 import { useBudget } from '../../context/BudgetContext'
 import AuthModal from '../auth/AuthModal'
 
-export default function Topbar({ pageTitle, query, setQuery, onMenu, showToast }) {
+export default function Topbar({ pageTitle, query, setQuery, showToast, onNavigate }) {
   const { profile, isLoggedIn, logout } = useBudget()
   const [authModal, setAuthModal] = useState({ open: false, mode: 'login' })
 
@@ -16,13 +16,11 @@ export default function Topbar({ pageTitle, query, setQuery, onMenu, showToast }
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-surface/80 backdrop-blur-xl">
       <div className="flex items-center gap-3 px-4 py-3.5 sm:px-6">
-        <button
-          onClick={onMenu}
-          className="rounded-lg p-2 text-ink-2 hover:bg-white/5 hover:text-slate-100 lg:hidden"
-          aria-label="Open menu"
-        >
-          <Menu size={20} />
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 shadow-md shadow-emerald-500/20">
+            <Wallet size={16} className="text-white" />
+          </div>
+        </div>
 
         <div className="min-w-0">
           <h1 className="truncate text-lg font-bold text-slate-100 sm:text-xl">{pageTitle}</h1>
@@ -43,41 +41,33 @@ export default function Topbar({ pageTitle, query, setQuery, onMenu, showToast }
           )}
 
           <button
-            className="relative rounded-xl border border-line bg-card p-2.5 text-ink-2 transition hover:text-slate-100"
-            aria-label="Notifications"
+            onClick={() => onNavigate && onNavigate('settings')}
+            className="flex items-center gap-2 rounded-xl border border-line bg-card py-1.5 pl-1.5 pr-3 transition hover:bg-card-2"
+            title="Manage profile & photo in settings"
           >
-            <Bell size={17} />
-            <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          </button>
-
-          <button className="flex items-center gap-2 rounded-xl border border-line bg-card py-1.5 pl-1.5 pr-3 transition hover:bg-card-2">
-            <span
-              className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${profile?.avatarColor || 'from-emerald-400 to-cyan-500'} text-xs font-bold text-white`}
-            >
-              {(profile?.name || 'Guest User')
-                .split(' ')
-                .map((n) => n[0])
-                .join('')}
-            </span>
+            {profile?.avatarUrl ? (
+              <img
+                src={profile.avatarUrl}
+                alt={profile?.name || 'User Avatar'}
+                className="h-8 w-8 rounded-lg object-cover ring-2 ring-emerald-500/30"
+              />
+            ) : (
+              <span
+                className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${profile?.avatarColor || 'from-emerald-400 to-cyan-500'} text-xs font-bold text-white`}
+              >
+                {(profile?.name || 'Guest User')
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')}
+              </span>
+            )}
             <span className="hidden text-left sm:block">
               <span className="block text-xs font-semibold text-slate-100">{isLoggedIn ? profile.name : 'Guest User'}</span>
               <span className="block text-[10px] text-ink-3">{isLoggedIn ? profile.role : 'Logged Out'}</span>
             </span>
           </button>
 
-          {isLoggedIn ? (
-            <button
-              onClick={() => {
-                logout()
-                if (showToast) showToast('Logged out of session', 'info')
-              }}
-              className="flex items-center gap-1.5 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-400 transition hover:bg-red-500/20"
-              title="Log out of account"
-            >
-              <LogOut size={15} />
-              <span className="hidden sm:inline">Log Out</span>
-            </button>
-          ) : (
+          {!isLoggedIn && (
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setAuthModal({ open: true, mode: 'login' })}

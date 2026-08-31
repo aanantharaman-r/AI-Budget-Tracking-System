@@ -6,7 +6,6 @@ import {
   Sparkles,
   Settings,
   Wallet,
-  X,
   RefreshCcw,
 } from 'lucide-react'
 import { useBudget } from '../../context/BudgetContext'
@@ -20,24 +19,18 @@ const nav = [
   { id: 'settings', label: 'Settings', icon: Settings },
 ]
 
-export default function Sidebar({ page, setPage, open, onClose }) {
+export default function Sidebar({ page, setPage }) {
   const { resetData } = useBudget()
 
   const handleNav = (id) => {
     setPage(id)
-    onClose()
   }
 
   return (
     <>
-      {open && (
-        <div className="fade-in fixed inset-0 z-40 bg-black/60 lg:hidden" onClick={onClose} />
-      )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-line bg-card transition-transform duration-300 lg:static lg:translate-x-0 ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`hidden lg:flex w-64 flex-col border-r border-line bg-card static translate-x-0`}
       >
         <div className="flex items-center justify-between px-5 py-5">
           <div className="flex items-center gap-2.5">
@@ -51,9 +44,6 @@ export default function Sidebar({ page, setPage, open, onClose }) {
               <p className="text-[11px] text-ink-3">AI-powered finance</p>
             </div>
           </div>
-          <button className="text-ink-2 hover:text-slate-100 lg:hidden" onClick={onClose} aria-label="Close menu">
-            <X size={20} />
-          </button>
         </div>
 
         <nav className="mt-2 flex-1 space-y-1 px-3">

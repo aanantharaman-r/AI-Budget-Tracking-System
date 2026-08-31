@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react'
 import StatCards from '../components/dashboard/StatCards'
 import CashflowChart from '../components/charts/CashflowChart'
 import CategoryDonut from '../components/charts/CategoryDonut'
+import DailyUsageBarChart from '../components/charts/DailyUsageBarChart'
 import RecentTransactions from '../components/dashboard/RecentTransactions'
 import BudgetProgress from '../components/dashboard/BudgetProgress'
 import AIInsights from '../components/dashboard/AIInsights'
@@ -53,6 +54,17 @@ export default function Dashboard({ showToast, onNavigate }) {
           <div className="p-5">
             <CategoryDonut />
           </div>
+        </div>
+      </div>
+
+      {/* Daily Money Usage Bar Chart */}
+      <div className="card">
+        <div className="border-b border-line px-5 py-4">
+          <h2 className="font-semibold text-slate-100">Daily money usage</h2>
+          <p className="text-xs text-ink-3">Tracking daily spending money vs incoming money</p>
+        </div>
+        <div className="p-4 sm:p-5">
+          <DailyUsageBarChart />
         </div>
       </div>
 

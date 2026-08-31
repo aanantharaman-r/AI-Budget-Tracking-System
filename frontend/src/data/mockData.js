@@ -135,6 +135,7 @@ export const initialBudgets = [
 export const mockProfile = {
   name: 'User',
   email: 'user@finance.app',
+  avatarUrl: '',
   avatarColor: 'from-emerald-400 to-cyan-500',
   role: 'Personal Account',
 

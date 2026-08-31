@@ -409,10 +409,18 @@ export function BudgetProvider({ children }) {
   // ========================================
 
   const updateProfile = useCallback((data) => {
-    setProfile((prev) => ({
-      ...prev,
-      ...data,
-    }))
+    setProfile((prev) => {
+      const updated = {
+        ...prev,
+        ...data,
+      }
+      try {
+        localStorage.setItem('user_profile', JSON.stringify(updated))
+      } catch (e) {
+        console.error('Failed to save user_profile to localStorage:', e)
+      }
+      return updated
+    })
   }, [])
 
   // ========================================

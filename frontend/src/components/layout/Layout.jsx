@@ -12,6 +12,8 @@ import Toast from '../ui/Toast'
 
 import AddTransaction from '../../pages/AddTransaction'
 
+import MobileBottomNav from './MobileBottomNav'
+
 const titles = {
   dashboard: 'Dashboard',
   'add-transaction': 'Add Transaction',
@@ -24,7 +26,6 @@ const titles = {
 function MainLayout() {
   const { isLoggedIn } = useBudget()
   const [page, setPage] = useState('dashboard')
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [toast, setToast] = useState(null)
 
   const showToast = (message, tone = 'success') => setToast({ message, tone })
@@ -49,15 +50,16 @@ function MainLayout() {
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar page={page} setPage={setPage} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar page={page} setPage={setPage} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar pageTitle={titles[page]} onMenu={() => setSidebarOpen(true)} showToast={showToast} />
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <Topbar pageTitle={titles[page]} showToast={showToast} onNavigate={setPage} />
+        <main className="flex-1 px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-6">
           <div key={page} className="fade-in mx-auto max-w-7xl">
             {content[page]}
           </div>
         </main>
       </div>
+      <MobileBottomNav page={page} setPage={setPage} />
       <Toast toast={toast} onClose={() => setToast(null)} />
     </div>
   )

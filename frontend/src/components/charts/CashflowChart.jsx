@@ -133,8 +133,8 @@ export default function CashflowChart() {
                 <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="gExpense" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#22d3ee" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#22d3ee" stopOpacity={0} />
+                <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#f43f5e" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
@@ -173,7 +173,7 @@ export default function CashflowChart() {
             <Area
               type="monotone"
               dataKey="expense"
-              stroke="#22d3ee"
+              stroke="#f43f5e"
               strokeWidth={2.5}
               fill="url(#gExpense)"
               dot={false}
