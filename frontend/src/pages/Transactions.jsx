@@ -67,7 +67,7 @@ export default function Transactions({ showToast, onNavigate }) {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'aura-transactions.csv'
+    a.download = 'budz-ai-transactions.csv'
     a.click()
     URL.revokeObjectURL(url)
     showToast('CSV exported')
@@ -75,17 +75,17 @@ export default function Transactions({ showToast, onNavigate }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="neutral">{filtered.length} transactions</Badge>
           <Badge tone="good">In {totalIn.toFixed(0)}</Badge>
           <Badge tone="warn">Out {totalOut.toFixed(0)}</Badge>
         </div>
-        <div className="flex gap-2">
-          <button onClick={exportCsv} className="btn-ghost">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button onClick={exportCsv} className="btn-ghost flex-1 sm:flex-initial">
             <Download size={15} /> Export
           </button>
-          <button onClick={openAdd} className="btn-primary">
+          <button onClick={openAdd} className="btn-primary flex-1 sm:flex-initial">
             <Plus size={16} /> Add transaction
           </button>
         </div>

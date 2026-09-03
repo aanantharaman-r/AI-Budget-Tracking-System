@@ -1,7 +1,24 @@
-export function computeStats(transactions, ref = new Date(), startingBalance = 0, monthlySalary = 0) {
-  const current = transactions.filter((t) => {
+export function getRefDate(transactions, ref = new Date()) {
+  if (!transactions || transactions.length === 0) return ref
+  const hasCurrent = transactions.some((t) => {
     const d = new Date(t.date)
     return d.getMonth() === ref.getMonth() && d.getFullYear() === ref.getFullYear()
+  })
+  if (hasCurrent) return ref
+
+  let latest = new Date(transactions[0].date)
+  for (let i = 1; i < transactions.length; i++) {
+    const d = new Date(transactions[i].date)
+    if (d > latest) latest = d
+  }
+  return latest
+}
+
+export function computeStats(transactions, ref = new Date(), startingBalance = 0, monthlySalary = 0) {
+  const effectiveRef = getRefDate(transactions, ref)
+  const current = transactions.filter((t) => {
+    const d = new Date(t.date)
+    return d.getMonth() === effectiveRef.getMonth() && d.getFullYear() === effectiveRef.getFullYear()
   })
 
   let otherIncome = 0
@@ -43,24 +60,26 @@ export function monthlySeries(transactions, months) {
 }
 
 export function categoryTotals(transactions, ref = new Date(), type = 'expense') {
+  const effectiveRef = getRefDate(transactions, ref)
   const totals = {}
   for (const t of transactions) {
     const d = new Date(t.date)
     if (t.type !== type) continue
-    if (d.getMonth() !== ref.getMonth() || d.getFullYear() !== ref.getFullYear()) continue
+    if (d.getMonth() !== effectiveRef.getMonth() || d.getFullYear() !== effectiveRef.getFullYear()) continue
     totals[t.categoryId] = (totals[t.categoryId] || 0) + t.amount
   }
   return totals
 }
 
 export function spentByCategory(transactions, categoryId, ref = new Date()) {
+  const effectiveRef = getRefDate(transactions, ref)
   return transactions
     .filter(
       (t) =>
         t.categoryId === categoryId &&
         t.type === 'expense' &&
-        new Date(t.date).getMonth() === ref.getMonth() &&
-        new Date(t.date).getFullYear() === ref.getFullYear(),
+        new Date(t.date).getMonth() === effectiveRef.getMonth() &&
+        new Date(t.date).getFullYear() === effectiveRef.getFullYear(),
     )
     .reduce((sum, t) => sum + t.amount, 0)
 }

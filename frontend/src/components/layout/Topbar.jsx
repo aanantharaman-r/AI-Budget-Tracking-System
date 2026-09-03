@@ -17,8 +17,8 @@ export default function Topbar({ pageTitle, query, setQuery, showToast, onNaviga
     <header className="sticky top-0 z-30 border-b border-line bg-surface/80 backdrop-blur-xl">
       <div className="flex items-center gap-3 px-4 py-3.5 sm:px-6">
         <div className="flex items-center gap-2 lg:hidden">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 shadow-md shadow-emerald-500/20">
-            <Wallet size={16} className="text-white" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/60 p-1 ring-2 ring-emerald-500/40 shadow-md shadow-emerald-500/20 overflow-hidden shrink-0">
+            <img src="/icon.png" alt="Budz AI Logo" className="h-full w-full object-contain rounded-full" />
           </div>
         </div>
 

@@ -21,14 +21,17 @@ export default function Dashboard({ showToast, onNavigate }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-bold text-slate-100">Financial overview</h2>
-          <p className="mt-1 text-sm text-ink-2">
-            Here&apos;s how your money moved this month — and what your AI assistant noticed.
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
+          <h2 className="text-xl font-bold text-slate-100 sm:text-2xl">Financial overview</h2>
+          <p className="mt-1 text-xs text-ink-2 sm:text-sm leading-relaxed">
+            Here&apos;s how your money moved this month <span className="hidden sm:inline">— and what your AI assistant noticed.</span>
           </p>
         </div>
-        <button onClick={() => onNavigate?.('add-transaction')} className="btn-primary">
+        <button 
+          onClick={() => onNavigate?.('add-transaction')} 
+          className="btn-primary shrink-0 w-full sm:w-auto justify-center py-2.5 shadow-md"
+        >
           <Plus size={16} /> Add transaction
         </button>
       </div>

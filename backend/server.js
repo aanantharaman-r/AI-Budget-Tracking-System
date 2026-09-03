@@ -19,6 +19,7 @@ let db;
 let budgetsCollection;
 let transactionsCollection;
 let usersCollection;
+let aiChatsCollection;
 
 // ========================================
 // Gemini AI
@@ -41,6 +42,7 @@ async function connectDB() {
     budgetsCollection = db.collection("budgets");
     transactionsCollection = db.collection("transactions");
     usersCollection = db.collection("users");
+    aiChatsCollection = db.collection("aiChats");
 
     console.log("MongoDB Connected Successfully!");
   } catch (error) {
@@ -54,7 +56,7 @@ async function connectDB() {
 // ========================================
 
 app.get("/", (req, res) => {
-  res.send("AI Budget Tracker Backend is Running!");
+  res.send("Budz AI Backend is Running!");
 });
 
 // ========================================
@@ -474,6 +476,36 @@ app.delete(
 // AI BUDGET ASSISTANT
 // ========================================
 
+// GET AI CHAT HISTORY
+app.get("/api/ai/chat/history", async (req, res) => {
+  try {
+    const userId = req.headers["x-user-id"] || req.query.userId || "default";
+    const history = await aiChatsCollection
+      .find({ userId })
+      .sort({ timestamp: 1 })
+      .limit(100)
+      .toArray();
+
+    res.status(200).json({ history });
+  } catch (error) {
+    console.error("Error fetching AI chat history:", error);
+    res.status(500).json({ message: "Failed to fetch chat history", error: error.message });
+  }
+});
+
+// CLEAR AI CHAT HISTORY
+app.delete("/api/ai/chat/history", async (req, res) => {
+  try {
+    const userId = req.headers["x-user-id"] || req.body.userId || req.query.userId || "default";
+    await aiChatsCollection.deleteMany({ userId });
+    res.status(200).json({ message: "AI chat history cleared successfully" });
+  } catch (error) {
+    console.error("Error clearing AI chat history:", error);
+    res.status(500).json({ message: "Failed to clear chat history", error: error.message });
+  }
+});
+
+// POST AI CHAT MESSAGE
 app.post("/api/ai/chat", async (req, res) => {
   try {
     const { message } = req.body;
@@ -485,6 +517,17 @@ app.post("/api/ai/chat", async (req, res) => {
     }
 
     const userId = req.headers["x-user-id"] || req.body.userId || "default";
+
+    // ----------------------------------------
+    // Save User Question to Database
+    // ----------------------------------------
+    const userMsgDoc = {
+      userId,
+      role: "user",
+      text: message.trim(),
+      timestamp: new Date(),
+    };
+    await aiChatsCollection.insertOne(userMsgDoc);
 
     // ----------------------------------------
     // Get latest salary for user
@@ -600,20 +643,48 @@ Give a helpful answer to the user's question.
     // Gemini Request
     // ----------------------------------------
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3.7-flash",
-      contents: prompt,
-      config: {
-        systemInstruction:
-          "You are a helpful AI personal budget assistant. Always use the provided financial data and never invent financial information.",
-        temperature: 0.4,
-        maxOutputTokens: 500,
-      },
-    });
+    const apiKey = process.env.GEMINI_API_KEY;
+    const activeAi = new GoogleGenAI({ apiKey });
 
-    const answer =
-      response.text ||
-      "Sorry, I could not generate an answer.";
+    const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.5-pro"];
+    let response = null;
+    let lastError = null;
+
+    for (const modelName of modelsToTry) {
+      try {
+        response = await activeAi.models.generateContent({
+          model: modelName,
+          contents: prompt,
+          config: {
+            systemInstruction:
+              "You are a helpful AI personal budget assistant. Always use the provided financial data and never invent financial information.",
+            temperature: 0.4,
+            maxOutputTokens: 500,
+          },
+        });
+        if (response && response.text) break;
+      } catch (err) {
+        console.warn(`Gemini model ${modelName} attempt failed:`, err.message);
+        lastError = err;
+      }
+    }
+
+    if (!response || !response.text) {
+      throw lastError || new Error("Failed to get response from Gemini API");
+    }
+
+    const answer = response.text;
+
+    // ----------------------------------------
+    // Save AI Response to Database
+    // ----------------------------------------
+    const aiMsgDoc = {
+      userId,
+      role: "ai",
+      text: answer,
+      timestamp: new Date(),
+    };
+    await aiChatsCollection.insertOne(aiMsgDoc);
 
     console.log("AI Question:", message);
     console.log("AI Answer:", answer);

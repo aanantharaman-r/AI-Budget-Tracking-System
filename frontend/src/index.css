@@ -123,3 +123,34 @@
 .recharts-tooltip-cursor {
   fill: rgba(255, 255, 255, 0.04);
 }
+
+@keyframes logoPulseFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.7));
+  }
+  50% {
+    transform: translateY(-8px) scale(1.08) rotate(3deg);
+    filter: drop-shadow(0 0 28px rgba(6, 182, 212, 0.95));
+  }
+}
+
+@keyframes logoPulseGlow {
+  0%, 100% {
+    transform: scale(0.92);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.9;
+  }
+}
+
+.animate-logo-float {
+  animation: logoPulseFloat 3.2s ease-in-out infinite;
+}
+
+.animate-logo-glow {
+  animation: logoPulseGlow 2.5s ease-in-out infinite;
+}
+

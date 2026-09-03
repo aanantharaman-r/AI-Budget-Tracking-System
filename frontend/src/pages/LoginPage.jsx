@@ -107,13 +107,13 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
         {/* Header Branding */}
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-4">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-75 blur" />
-            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 shadow-xl">
-              <Wallet size={28} className="text-white" />
+            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-75 blur" />
+            <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-slate-900/90 p-2 shadow-xl ring-2 ring-emerald-500/50 overflow-hidden">
+              <img src="/icon.png" alt="Budz AI Logo" className="h-full w-full object-contain rounded-full" />
             </div>
           </div>
           <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
-            Aura <span className="grad-text">Budget</span>
+            Budz <span className="grad-text">AI</span>
           </h1>
           <p className="mt-1 text-xs text-ink-2 flex items-center gap-1">
             <Sparkles size={13} className="text-cyan-400" />

@@ -6,7 +6,6 @@ import {
   Globe,
   Shield,
   Save,
-  RefreshCcw,
   Check,
   Camera,
   Upload,
@@ -62,7 +61,7 @@ function Section({ icon: Icon, title, desc, children }) {
 }
 
 export default function Settings({ showToast }) {
-  const { profile, updateProfile, resetData, isLoggedIn, logout } = useBudget()
+  const { profile, updateProfile, isLoggedIn, logout } = useBudget()
   const fileInputRef = useRef(null)
 
   const [form, setForm] = useState({
@@ -308,7 +307,7 @@ export default function Settings({ showToast }) {
             {[
               { key: 'budgetAlerts', label: 'Budget alerts', desc: 'When a category crosses 80% of its limit' },
               { key: 'monthlySummary', label: 'Monthly summary', desc: 'A recap of your spending on the 1st' },
-              { key: 'tips', label: 'AI tips & insights', desc: 'Personalized suggestions from Aura AI' },
+              { key: 'tips', label: 'AI tips & insights', desc: 'Personalized suggestions from Budz AI' },
               { key: 'marketing', label: 'Feature updates', desc: 'News about new features and promotions' },
             ].map((n) => (
               <div key={n.key} className="flex items-center justify-between gap-4">
@@ -325,16 +324,6 @@ export default function Settings({ showToast }) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <button type="submit" className="btn-primary">
             <Save size={16} /> Save changes
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              resetData()
-              showToast('Demo data reset', 'info')
-            }}
-            className="btn-ghost"
-          >
-            <RefreshCcw size={16} /> Reset demo data
           </button>
           <span className="flex items-center gap-1.5 text-xs text-ink-3 sm:ml-auto">
             <Check size={13} className="text-emerald-400" /> All changes stored locally

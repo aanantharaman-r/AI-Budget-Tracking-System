@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Wallet, Sparkles, Database, ShieldCheck, Cpu, Zap, IndianRupee } from 'lucide-react'
 
 const LOADING_STEPS = [
-  { threshold: 0, text: 'Initializing Aura AI core...', icon: Cpu },
+  { threshold: 0, text: 'Initializing Budz AI core...', icon: Cpu },
   { threshold: 25, text: 'Connecting MongoDB Database...', icon: Database },
   { threshold: 50, text: 'Analyzing financial insights...', icon: Sparkles },
   { threshold: 75, text: 'Securing workspace session...', icon: ShieldCheck },
@@ -80,20 +80,27 @@ export default function LoadingScreen({ onComplete }) {
         {/* Animated App Icon with Glowing Spinning Rings */}
         <div className="relative mb-8 flex items-center justify-center">
           {/* Rotating Outer Gradient Ring */}
-          <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-emerald-500 via-cyan-400 to-violet-500 opacity-60 blur-md animate-spin" style={{ animationDuration: '8s' }} />
+          <div className="absolute -inset-5 rounded-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-violet-500 opacity-70 blur-md animate-spin" style={{ animationDuration: '7s' }} />
+
+          {/* Counter-rotating Dashed Ring */}
+          <div className="absolute -inset-3 rounded-full border border-dashed border-cyan-400/50 animate-spin" style={{ animationDuration: '12s', animationDirection: 'reverse' }} />
 
           {/* Pulsing Backlight Glow */}
-          <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 opacity-80 blur transition duration-500 animate-pulse" />
+          <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 opacity-80 blur animate-logo-glow" />
 
-          {/* Main Logo Container */}
-          <div className="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 shadow-2xl shadow-emerald-500/50 ring-2 ring-white/30 transform transition hover:scale-105">
-            <Wallet size={46} className="text-white drop-shadow-lg animate-bounce" style={{ animationDuration: '1.8s' }} />
+          {/* Main Logo Container & Animated Image */}
+          <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-slate-900/90 p-3 shadow-2xl shadow-emerald-500/50 ring-2 ring-emerald-400/60 overflow-hidden transform transition hover:scale-105">
+            <img 
+              src="/icon.png" 
+              alt="Budz AI Logo" 
+              className="h-full w-full object-contain rounded-full animate-logo-float" 
+            />
           </div>
         </div>
 
         {/* Brand Title with Gradient Effect */}
         <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-          Aura <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-teal-300 bg-clip-text text-transparent">Budget</span>
+          Budz <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-teal-300 bg-clip-text text-transparent">AI</span>
         </h1>
 
         <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-emerald-400/90 flex items-center gap-1.5">

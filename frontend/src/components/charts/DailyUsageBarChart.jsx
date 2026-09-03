@@ -10,6 +10,7 @@ import {
 } from 'recharts'
 import { fmtMoney } from '../../lib/format'
 import { useBudget } from '../../context/BudgetContext'
+import { getRefDate } from '../../lib/utils'
 
 function ChartTooltip({ active, payload, label, currency }) {
   if (!active || !payload?.length) return null
@@ -28,7 +29,7 @@ function ChartTooltip({ active, payload, label, currency }) {
 }
 
 function getDailySeries(transactions, range = '7d') {
-  const today = new Date()
+  const today = getRefDate(transactions, new Date())
   let daysCount = 7
   if (range === '14d') daysCount = 14
   if (range === '30d') {

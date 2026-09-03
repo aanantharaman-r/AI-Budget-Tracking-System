@@ -13,7 +13,7 @@ const navItems = [
   { id: 'add-transaction', label: 'Add', icon: PlusCircle },
   { id: 'transactions', label: 'Transactions', icon: ArrowLeftRight },
   { id: 'budgets', label: 'Budgets', icon: Target },
-  { id: 'insights', label: 'Insights', icon: Sparkles, badge: '5' },
+  { id: 'insights', label: 'Insights', icon: Sparkles },
   { id: 'settings', label: 'Settings', icon: Settings },
 ]
 

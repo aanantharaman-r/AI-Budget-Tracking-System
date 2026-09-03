@@ -11,7 +11,7 @@ import {
 } from 'recharts'
 import { fmtMoney } from '../../lib/format'
 import { useBudget } from '../../context/BudgetContext'
-import { monthlySeries } from '../../lib/utils'
+import { monthlySeries, getRefDate } from '../../lib/utils'
 import { lastMonths } from '../../lib/format'
 
 function ChartTooltip({ active, payload, label, currency }) {
@@ -31,9 +31,9 @@ function ChartTooltip({ active, payload, label, currency }) {
 }
 
 function currentMonthSeries(transactions, stats) {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = today.getMonth()
+  const refDate = getRefDate(transactions, new Date())
+  const year = refDate.getFullYear()
+  const month = refDate.getMonth()
 
   // Weeks breakdown of the current month
   const weeks = [
