@@ -70,7 +70,6 @@ export default function Settings({ showToast }) {
     avatarUrl: profile.avatarUrl || '',
     avatarColor: profile.avatarColor || 'from-emerald-400 to-cyan-500',
     currency: profile.currency,
-    monthlySalary: profile.monthlySalary || 0,
     startingBalance: profile.startingBalance,
     notifications: { ...profile.notifications },
   })
@@ -113,7 +112,6 @@ export default function Settings({ showToast }) {
       avatarUrl: form.avatarUrl,
       avatarColor: form.avatarColor,
       currency: form.currency,
-      monthlySalary: parseFloat(form.monthlySalary) || 0,
       startingBalance: parseFloat(form.startingBalance) || 0,
       notifications: form.notifications,
     })
@@ -257,8 +255,8 @@ export default function Settings({ showToast }) {
           </div>
         </Section>
 
-        <Section icon={Palette} title="Preferences" desc="Currency, salary and display options">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Section icon={Palette} title="Preferences" desc="Currency and display options">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="label">Currency</label>
               <select className="input" value={form.currency} onChange={(e) => set('currency', e.target.value)}>
@@ -268,16 +266,6 @@ export default function Settings({ showToast }) {
                   </option>
                 ))}
               </select>
-            </div>
-            <div>
-              <label className="label">Monthly Salary</label>
-              <input
-                className="input"
-                type="number"
-                step="500"
-                value={form.monthlySalary}
-                onChange={(e) => set('monthlySalary', e.target.value)}
-              />
             </div>
             <div>
               <label className="label">Starting balance</label>

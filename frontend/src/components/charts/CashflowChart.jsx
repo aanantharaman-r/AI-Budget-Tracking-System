@@ -43,10 +43,7 @@ function currentMonthSeries(transactions, stats) {
     { label: 'Week 4 (22-31)', minDay: 22, maxDay: 31, income: 0, expense: 0 },
   ]
 
-  // Add monthly base salary to Week 1
-  if (stats?.monthlySalary) {
-    weeks[0].income += stats.monthlySalary
-  }
+
 
   for (const t of transactions) {
     const d = new Date(t.date)

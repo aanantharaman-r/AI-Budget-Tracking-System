@@ -10,7 +10,6 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
     name: '',
     email: '',
     password: '',
-    salary: '50000',
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -29,7 +28,7 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
       setSubmitting(true)
       const endpoint = mode === 'register' ? '/api/auth/register' : '/api/auth/login'
       const payload = mode === 'register'
-        ? { name: form.name, email: form.email, password: form.password, salary: form.salary }
+        ? { name: form.name, email: form.email, password: form.password }
         : { email: form.email, password: form.password }
 
       const res = await fetch(`http://localhost:5000${endpoint}`, {
@@ -53,7 +52,6 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
         const fallbackUser = {
           name: form.name.trim() || form.email.split('@')[0],
           email: form.email.trim(),
-          monthlySalary: parseFloat(form.salary) || 50000,
         }
         updateProfile(fallbackUser)
         login(fallbackUser)
@@ -65,13 +63,11 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
       let userObj = data.user || {
         name: form.name || form.email.split('@')[0],
         email: form.email,
-        monthlySalary: parseFloat(form.salary) || 50000,
       }
 
       updateProfile({
         name: userObj.name,
         email: userObj.email,
-        monthlySalary: userObj.monthlySalary,
       })
 
       login(userObj)
@@ -86,7 +82,6 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
       const fallbackUser = {
         name: form.name.trim() || form.email.split('@')[0],
         email: form.email.trim(),
-        monthlySalary: parseFloat(form.salary) || 50000,
       }
       updateProfile(fallbackUser)
       login(fallbackUser)
@@ -168,21 +163,7 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
               />
             </div>
 
-            {mode === 'register' && (
-              <div>
-                <label className="label mb-1.5 flex items-center gap-1">
-                  <IndianRupee size={14} className="text-amber-400" /> Initial Monthly Salary (₹)
-                </label>
-                <input
-                  className="input"
-                  type="number"
-                  step="500"
-                  placeholder="50000"
-                  value={form.salary}
-                  onChange={(e) => set('salary', e.target.value)}
-                />
-              </div>
-            )}
+
 
             {error && <p className="rounded-xl bg-red-500/10 px-3.5 py-2 text-xs font-semibold text-red-400">{error}</p>}
 

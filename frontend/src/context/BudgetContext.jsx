@@ -442,13 +442,11 @@ export function BudgetProvider({ children }) {
       computeStats(
         transactions,
         new Date(),
-        profile?.startingBalance || 0,
-        profile?.monthlySalary || 0
+        profile?.startingBalance || 0
       ),
     [
       transactions,
       profile?.startingBalance,
-      profile?.monthlySalary,
     ]
   )
 

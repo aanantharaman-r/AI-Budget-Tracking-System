@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Wallet, TrendingUp, TrendingDown, PiggyBank, Pencil, Check } from 'lucide-react'
+import { Plus, TrendingUp, TrendingDown, PiggyBank, Percent } from 'lucide-react'
 import { fmtMoney } from '../../lib/format'
 import { useBudget } from '../../context/BudgetContext'
+import TransactionModal from '../transactions/TransactionModal'
 
 function StatCard({ label, value, sub, icon: Icon, iconClass, accent, action }) {
   return (
@@ -23,87 +24,78 @@ function StatCard({ label, value, sub, icon: Icon, iconClass, accent, action }) 
 }
 
 export default function StatCards({ showToast }) {
-  const { stats, profile, updateSalary } = useBudget()
-  const { balance, income, expense, savings, savingsRate, monthlySalary, otherIncome } = stats
+  const { stats, profile, addTransaction } = useBudget()
+  const { income, expense, savings, savingsRate } = stats
   const c = profile?.currency || 'INR'
 
-  const [editingSalary, setEditingSalary] = useState(false)
-  const [salaryVal, setSalaryVal] = useState(String(profile.monthlySalary || 0))
+  const [incomeModalOpen, setIncomeModalOpen] = useState(false)
 
-  const handleSalarySave = (e) => {
-    e.preventDefault()
-    updateSalary(salaryVal)
-    setEditingSalary(false)
-    if (showToast) showToast('Monthly salary updated')
+  const handleSaveIncome = (data) => {
+    addTransaction(data)
+    if (showToast) showToast('Income added successfully')
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <StatCard
-        label="Monthly Salary"
-        value={
-          editingSalary ? (
-            <form onSubmit={handleSalarySave} className="flex items-center gap-1">
-              <input
-                type="number"
-                min="0"
-                step="500"
-                value={salaryVal}
-                onChange={(e) => setSalaryVal(e.target.value)}
-                className="input w-28 py-1 text-sm"
-                autoFocus
-              />
-              <button type="submit" className="rounded-lg bg-emerald-500/20 p-1.5 text-emerald-400">
-                <Check size={14} />
-              </button>
-            </form>
-          ) : (
-            fmtMoney(monthlySalary, c)
-          )
-        }
-        sub={otherIncome > 0 ? `+${fmtMoney(otherIncome, c)} additional income` : 'Base monthly earnings'}
-        icon={Wallet}
-        iconClass="bg-emerald-500/10 text-emerald-400"
-        accent="from-emerald-500 to-cyan-500"
-        action={
-          !editingSalary && (
+    <>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="Total Income"
+          value={`+${fmtMoney(income, c)}`}
+          sub="Sum of recorded income entries"
+          icon={TrendingUp}
+          iconClass="bg-emerald-500/10 text-emerald-400"
+          accent="from-emerald-500 to-cyan-500"
+          action={
             <button
-              onClick={() => {
-                setSalaryVal(String(profile.monthlySalary || 0))
-                setEditingSalary(true)
-              }}
-              className="rounded-lg p-1.5 text-ink-3 transition hover:bg-white/5 hover:text-slate-100"
-              title="Edit Salary"
+              onClick={() => setIncomeModalOpen(true)}
+              className="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-2.5 py-1.5 text-xs font-semibold text-emerald-400 transition hover:bg-emerald-500/25 active:scale-95 shadow-sm"
+              title="Add Income"
             >
-              <Pencil size={13} />
+              <Plus size={14} /> Add Income
             </button>
-          )
-        }
+          }
+        />
+
+        <StatCard
+          label="Total Expenses"
+          value={`−${fmtMoney(expense, c)}`}
+          sub="This month's total spending"
+          icon={TrendingDown}
+          iconClass="bg-rose-500/10 text-rose-400"
+          accent="from-rose-500 to-orange-500"
+        />
+
+        <StatCard
+          label="Remaining Balance"
+          value={fmtMoney(savings, c)}
+          sub={`${savingsRate.toFixed(1)}% of income remaining`}
+          icon={PiggyBank}
+          iconClass="bg-violet-500/10 text-violet-400"
+          accent="from-violet-500 to-fuchsia-500"
+        />
+
+        <StatCard
+          label="Savings Rate"
+          value={`${savingsRate.toFixed(1)}%`}
+          sub={income > 0 ? `${fmtMoney(savings, c)} saved of ${fmtMoney(income, c)}` : 'Add income to calculate rate'}
+          icon={Percent}
+          iconClass="bg-cyan-500/10 text-cyan-400"
+          accent="from-cyan-500 to-blue-500"
+        />
+      </div>
+
+      <TransactionModal
+        open={incomeModalOpen}
+        onClose={() => setIncomeModalOpen(false)}
+        initial={{
+          type: 'income',
+          title: '',
+          amount: '',
+          categoryId: 'salary',
+          date: new Date().toISOString().slice(0, 10),
+        }}
+        onSave={handleSaveIncome}
       />
-      <StatCard
-        label="Total Income"
-        value={`+${fmtMoney(income, c)}`}
-        sub="Salary + extra income"
-        icon={TrendingUp}
-        iconClass="bg-cyan-500/10 text-cyan-400"
-        accent="from-cyan-500 to-blue-500"
-      />
-      <StatCard
-        label="Total Expenses"
-        value={`−${fmtMoney(expense, c)}`}
-        sub="This month's expenses"
-        icon={TrendingDown}
-        iconClass="bg-rose-500/10 text-rose-400"
-        accent="from-rose-500 to-orange-500"
-      />
-      <StatCard
-        label="Remaining Balance"
-        value={fmtMoney(savings, c)}
-        sub={`${savingsRate.toFixed(1)}% of income remaining`}
-        icon={PiggyBank}
-        iconClass="bg-violet-500/10 text-violet-400"
-        accent="from-violet-500 to-fuchsia-500"
-      />
-    </div>
+    </>
   )
 }

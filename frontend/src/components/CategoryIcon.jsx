@@ -10,6 +10,7 @@ import {
   Laptop,
   TrendingUp,
   Wallet,
+  MoreHorizontal,
 } from 'lucide-react'
 
 const map = {
@@ -24,6 +25,7 @@ const map = {
   laptop: Laptop,
   'trending-up': TrendingUp,
   wallet: Wallet,
+  'more-horizontal': MoreHorizontal,
 }
 
 export default function CategoryIcon({ icon, size = 18, className = '', style }) {

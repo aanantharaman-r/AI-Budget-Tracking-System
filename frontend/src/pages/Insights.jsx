@@ -13,7 +13,7 @@ function generateAiReply(userPrompt, stats, profile, transactions) {
   const c = profile.currency || 'INR'
   const sym = c === 'INR' ? '₹' : c === 'USD' ? '$' : `${c} `
   const prompt = userPrompt.toLowerCase()
-  const { income, expense, savings, monthlySalary } = stats
+  const { income, expense, savings } = stats
 
   // Check if asking about savings target e.g. "How can I save 2000 this month?"
   const saveMatch = userPrompt.match(/save\s+(?:₹|\$|INR|USD)?\s*(\d+(?:\.\d+)?)/i)
@@ -23,11 +23,11 @@ function generateAiReply(userPrompt, stats, profile, transactions) {
     const neededReduction = targetAmount - savings
 
     if (savings >= targetAmount) {
-      return `Great news! Your current remaining balance is ${fmtMoney(savings, c)}, which already meets your savings goal of ${sym}${targetAmount}. With a monthly salary of ${fmtMoney(monthlySalary, c)} and total expenses of ${fmtMoney(expense, c)}, you're in great shape!`
+      return `Great news! Your current remaining balance is ${fmtMoney(savings, c)}, which already meets your savings goal of ${sym}${targetAmount}. With a total income of ${fmtMoney(income, c)} and total expenses of ${fmtMoney(expense, c)}, you're in great shape!`
     }
 
     if (income <= 0) {
-      return `To save ${sym}${targetAmount}, please first set or add your monthly salary/income. Currently your recorded income is ${fmtMoney(0, c)}.`
+      return `To save ${sym}${targetAmount}, please first add your income entries. Currently your recorded income is ${fmtMoney(0, c)}.`
     }
 
     // Top spending categories
@@ -39,7 +39,7 @@ function generateAiReply(userPrompt, stats, profile, transactions) {
     })
     const sortedCats = Object.entries(catExpenses).sort((a, b) => b[1] - a[1])
 
-    let advice = `Based on your monthly salary of ${fmtMoney(monthlySalary, c)}, your total income is ${fmtMoney(income, c)} and current expenses are ${fmtMoney(expense, c)} (remaining balance: ${fmtMoney(savings, c)}).\n\nTo save ${sym}${targetAmount} this month, you need to cut spending by ${fmtMoney(neededReduction, c)}:`
+    let advice = `Based on your total income of ${fmtMoney(income, c)}, your current expenses are ${fmtMoney(expense, c)} (remaining balance: ${fmtMoney(savings, c)}).\n\nTo save ${sym}${targetAmount} this month, you need to cut spending by ${fmtMoney(neededReduction, c)}:`
     
     if (sortedCats.length > 0) {
       advice += `\n• Look into your top expense area (${sortedCats[0][0]}): currently ${fmtMoney(sortedCats[0][1], c)}.`
@@ -55,14 +55,14 @@ function generateAiReply(userPrompt, stats, profile, transactions) {
   }
 
   if (prompt.includes('salary') || prompt.includes('income')) {
-    return `Your monthly base salary is set to ${fmtMoney(monthlySalary, c)} (Total income including extra entries: ${fmtMoney(income, c)}). Total expenses so far are ${fmtMoney(expense, c)}, leaving a balance of ${fmtMoney(savings, c)}.`
+    return `Your recorded total income is ${fmtMoney(income, c)}. Total expenses so far are ${fmtMoney(expense, c)}, leaving a balance of ${fmtMoney(savings, c)}.`
   }
 
   if (prompt.includes('expense') || prompt.includes('spend')) {
     return `Your total expenses this month are ${fmtMoney(expense, c)} out of your ${fmtMoney(income, c)} income. You have ${fmtMoney(savings, c)} remaining.`
   }
 
-  return `Based on your financial data:\n• Monthly Salary: ${fmtMoney(monthlySalary, c)}\n• Total Income: ${fmtMoney(income, c)}\n• Total Expenses: ${fmtMoney(expense, c)}\n• Remaining Balance: ${fmtMoney(savings, c)}\n\nYou are saving ${stats.savingsRate.toFixed(1)}% of your income this month.`
+  return `Based on your financial data:\n• Total Income: ${fmtMoney(income, c)}\n• Total Expenses: ${fmtMoney(expense, c)}\n• Remaining Balance: ${fmtMoney(savings, c)}\n\nYou are saving ${stats.savingsRate.toFixed(1)}% of your income this month.`
 }
 
 export default function Insights() {
@@ -72,8 +72,8 @@ export default function Insights() {
 
   const welcomeMsg = useMemo(() => ({
     role: 'ai',
-    text: `Hi ${profile.name}! I am your AI financial assistant powered by Gemini. Your monthly salary is ${fmtMoney(stats.monthlySalary, profile.currency)}, current expenses are ${fmtMoney(stats.expense, profile.currency)}, and remaining balance is ${fmtMoney(stats.savings, profile.currency)}. How can I help you optimize your money today?`,
-  }), [profile.name, profile.currency, stats.monthlySalary, stats.expense, stats.savings])
+    text: `Hi ${profile.name}! I am your AI financial assistant powered by Gemini. Your total recorded income is ${fmtMoney(stats.income, profile.currency)}, current expenses are ${fmtMoney(stats.expense, profile.currency)}, and remaining balance is ${fmtMoney(stats.savings, profile.currency)}. How can I help you optimize your money today?`,
+  }), [profile.name, profile.currency, stats.income, stats.expense, stats.savings])
 
   // Initialize messages instantly from localStorage to prevent chat disappearing when switching sidebar tabs
   const [messages, setMessages] = useState(() => {

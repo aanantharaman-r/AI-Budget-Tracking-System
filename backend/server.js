@@ -578,17 +578,14 @@ app.post("/api/ai/chat", async (req, res) => {
       }
     }
 
-    const remainingBalance =
-      salary + totalIncome - totalExpenses;
+    const remainingBalance = totalIncome - totalExpenses;
 
     // ----------------------------------------
     // Prepare financial data for AI
     // ----------------------------------------
 
     const financialData = {
-      monthlySalary: salary,
-
-      additionalIncome: totalIncome,
+      totalIncome: totalIncome,
 
       totalExpenses: totalExpenses,
 

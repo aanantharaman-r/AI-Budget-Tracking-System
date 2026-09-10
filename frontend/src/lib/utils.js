@@ -14,14 +14,14 @@ export function getRefDate(transactions, ref = new Date()) {
   return latest
 }
 
-export function computeStats(transactions, ref = new Date(), startingBalance = 0, monthlySalary = 0) {
+export function computeStats(transactions, ref = new Date(), startingBalance = 0) {
   const effectiveRef = getRefDate(transactions, ref)
   const current = transactions.filter((t) => {
     const d = new Date(t.date)
     return d.getMonth() === effectiveRef.getMonth() && d.getFullYear() === effectiveRef.getFullYear()
   })
 
-  let otherIncome = 0
+  let income = 0
   let expense = 0
   let totalIn = 0
   let totalOut = 0
@@ -32,16 +32,15 @@ export function computeStats(transactions, ref = new Date(), startingBalance = 0
   }
 
   for (const t of current) {
-    if (t.type === 'income') otherIncome += t.amount
+    if (t.type === 'income') income += t.amount
     else expense += t.amount
   }
 
-  const income = (monthlySalary || 0) + otherIncome
-  const balance = startingBalance + (monthlySalary || 0) + totalIn - totalOut
+  const balance = startingBalance + totalIn - totalOut
   const savings = income - expense
   const savingsRate = income > 0 ? (savings / income) * 100 : 0
 
-  return { income, expense, savings, savingsRate, balance, monthlySalary, otherIncome }
+  return { income, expense, savings, savingsRate, balance, monthlySalary: 0, otherIncome: income }
 }
 
 export function monthlySeries(transactions, months) {

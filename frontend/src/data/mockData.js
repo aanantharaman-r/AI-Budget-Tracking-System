@@ -55,6 +55,13 @@ export const categories = [
     type: 'expense',
   },
   {
+    id: 'other_expense',
+    name: 'Others',
+    icon: 'more-horizontal',
+    color: '#64748b',
+    type: 'expense',
+  },
+  {
     id: 'salary',
     name: 'Salary',
     icon: 'briefcase',
@@ -73,6 +80,13 @@ export const categories = [
     name: 'Investments',
     icon: 'trending-up',
     color: '#a3e635',
+    type: 'income',
+  },
+  {
+    id: 'other_income',
+    name: 'Others',
+    icon: 'more-horizontal',
+    color: '#38bdf8',
     type: 'income',
   },
 ]
@@ -141,7 +155,7 @@ export const mockProfile = {
 
   currency: 'INR',
 
-  monthlySalary: 50000,
+  monthlySalary: 0,
 
   startingBalance: 0,
 

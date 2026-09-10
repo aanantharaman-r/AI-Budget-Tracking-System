@@ -5,24 +5,24 @@ import { fmtMoney } from '../../lib/format'
 
 export default function AIInsights({ onViewAll }) {
   const { stats, profile } = useBudget()
-  const { monthlySalary, income, expense, savings, savingsRate } = stats
+  const { income, expense, savings, savingsRate } = stats
   const c = profile.currency
 
   const dynamicInsights = []
 
-  if (monthlySalary > 0 && expense > monthlySalary) {
+  if (income > 0 && expense > income) {
     dynamicInsights.push({
       id: 1,
       severity: 'warn',
-      title: 'Expenses exceed salary',
-      body: `Your total expenses (${fmtMoney(expense, c)}) have exceeded your base monthly salary of ${fmtMoney(monthlySalary, c)}.`,
+      title: 'Expenses exceed income',
+      body: `Your total expenses (${fmtMoney(expense, c)}) have exceeded your recorded income of ${fmtMoney(income, c)}.`,
     })
-  } else if (monthlySalary > 0) {
+  } else if (income > 0) {
     dynamicInsights.push({
       id: 1,
       severity: 'good',
-      title: 'Salary budget status',
-      body: `You have spent ${fmtMoney(expense, c)} out of your ${fmtMoney(monthlySalary, c)} monthly salary (${savingsRate.toFixed(1)}% remaining).`,
+      title: 'Income budget status',
+      body: `You have spent ${fmtMoney(expense, c)} out of your ${fmtMoney(income, c)} total income (${savingsRate.toFixed(1)}% remaining).`,
     })
   }
 

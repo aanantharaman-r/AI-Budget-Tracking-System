@@ -11,7 +11,6 @@ export default function AuthModal({ open, onClose, initialMode = 'login', showTo
     name: '',
     email: '',
     password: '',
-    salary: '50000',
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -30,7 +29,7 @@ export default function AuthModal({ open, onClose, initialMode = 'login', showTo
       setSubmitting(true)
       const endpoint = mode === 'register' ? '/api/auth/register' : '/api/auth/login'
       const payload = mode === 'register' 
-        ? { name: form.name, email: form.email, password: form.password, salary: form.salary }
+        ? { name: form.name, email: form.email, password: form.password }
         : { email: form.email, password: form.password }
 
       const res = await fetch(`http://localhost:5000${endpoint}`, {
@@ -48,7 +47,6 @@ export default function AuthModal({ open, onClose, initialMode = 'login', showTo
       updateProfile({
         name: data.user.name,
         email: data.user.email,
-        monthlySalary: data.user.monthlySalary || parseFloat(form.salary) || 0,
       })
 
       login(data.user)
@@ -112,22 +110,6 @@ export default function AuthModal({ open, onClose, initialMode = 'login', showTo
             onChange={(e) => set('password', e.target.value)}
           />
         </div>
-
-        {mode === 'register' && (
-          <div>
-            <label className="label mb-1.5 flex items-center gap-1">
-              <IndianRupee size={14} className="text-amber-400" /> Initial Monthly Salary (₹)
-            </label>
-            <input
-              className="input"
-              type="number"
-              step="500"
-              placeholder="50000"
-              value={form.salary}
-              onChange={(e) => set('salary', e.target.value)}
-            />
-          </div>
-        )}
 
         {error && <p className="rounded-xl bg-red-500/10 px-3.5 py-2 text-xs font-semibold text-red-400">{error}</p>}
 

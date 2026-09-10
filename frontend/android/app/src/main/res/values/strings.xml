@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AI Budget Tracker</string>
+    <string name="title_activity_main">AI Budget Tracker</string>
+    <string name="package_name">com.aibudget.tracker</string>
+    <string name="custom_url_scheme">com.aibudget.tracker</string>
+</resources>
