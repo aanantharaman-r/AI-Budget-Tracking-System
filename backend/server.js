@@ -718,6 +718,7 @@ Give a helpful answer to the user's question.
 
 const PORT = process.env.PORT || 5000;
 
+// Local development only
 if (require.main === module) {
   async function startServer() {
     await connectDB();
@@ -732,4 +733,5 @@ if (require.main === module) {
   startServer();
 }
 
+// Vercel
 module.exports = app;
