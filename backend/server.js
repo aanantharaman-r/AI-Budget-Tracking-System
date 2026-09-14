@@ -9,6 +9,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Middleware to ensure MongoDB connection for serverless (Vercel) & local runs
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("Database middleware connection error:", error);
+    res.status(500).json({ message: "Database connection failed" });
+  }
+});
+
 // ========================================
 // MongoDB
 // ========================================
@@ -34,6 +45,7 @@ const ai = new GoogleGenAI({
 // ========================================
 
 async function connectDB() {
+  if (db) return db;
   try {
     await client.connect();
 
@@ -45,9 +57,9 @@ async function connectDB() {
     aiChatsCollection = db.collection("aiChats");
 
     console.log("MongoDB Connected Successfully!");
+    return db;
   } catch (error) {
     console.error("MongoDB Connection Failed:", error);
-    process.exit(1);
   }
 }
 
@@ -704,16 +716,20 @@ Give a helpful answer to the user's question.
 // Start Server
 // ========================================
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-async function startServer() {
-  await connectDB();
+if (require.main === module) {
+  async function startServer() {
+    await connectDB();
 
-  app.listen(PORT, () => {
-    console.log(
-      `Server running on http://localhost:${PORT}`
-    );
-  });
+    app.listen(PORT, () => {
+      console.log(
+        `Server running on http://localhost:${PORT}`
+      );
+    });
+  }
+
+  startServer();
 }
 
-startServer();
+module.exports = app;
