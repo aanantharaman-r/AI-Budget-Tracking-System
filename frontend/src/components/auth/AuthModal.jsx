@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { UserPlus, LogIn, Mail, Lock, User, IndianRupee } from 'lucide-react'
 import Modal from '../ui/Modal'
 import { useBudget } from '../../context/BudgetContext'
+import { API_URL } from '../../config/api'
 
 export default function AuthModal({ open, onClose, initialMode = 'login', showToast }) {
   const [mode, setMode] = useState(initialMode) // 'login' | 'register'
@@ -32,7 +33,7 @@ export default function AuthModal({ open, onClose, initialMode = 'login', showTo
         ? { name: form.name, email: form.email, password: form.password }
         : { email: form.email, password: form.password }
 
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

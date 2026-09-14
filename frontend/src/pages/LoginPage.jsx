@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { UserPlus, LogIn, Mail, Lock, User, IndianRupee, Wallet, Sparkles } from 'lucide-react'
 import { useBudget } from '../context/BudgetContext'
+import { API_URL } from '../config/api'
 
 export default function LoginPage({ showToast, initialMode = 'login', onComplete }) {
   const [mode, setMode] = useState(initialMode) // 'login' | 'register'
@@ -31,7 +32,7 @@ export default function LoginPage({ showToast, initialMode = 'login', onComplete
         ? { name: form.name, email: form.email, password: form.password }
         : { email: form.email, password: form.password }
 
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

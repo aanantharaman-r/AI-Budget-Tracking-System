@@ -8,6 +8,7 @@ import {
 import Badge from '../components/ui/Badge'
 import { useBudget } from '../context/BudgetContext'
 import { fmtMoney } from '../lib/format'
+import { API_URL } from '../config/api'
 
 function generateAiReply(userPrompt, stats, profile, transactions) {
   const c = profile.currency || 'INR'
@@ -107,7 +108,7 @@ export default function Insights() {
   useEffect(() => {
     async function loadHistory() {
       try {
-        const res = await fetch(`http://localhost:5000/api/ai/chat/history?userId=${encodeURIComponent(userId)}`)
+        const res = await fetch(`${API_URL}/api/ai/chat/history?userId=${encodeURIComponent(userId)}`)
         if (res.ok) {
           const data = await res.json()
           if (data.history && data.history.length > 0) {
@@ -128,7 +129,7 @@ export default function Insights() {
   const clearHistory = async () => {
     try {
       localStorage.removeItem(storageKey)
-      await fetch('http://localhost:5000/api/ai/chat/history', {
+      await fetch(`${API_URL}/api/ai/chat/history`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId }),
@@ -150,7 +151,7 @@ export default function Insights() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:5000/api/ai/chat', {
+      const res = await fetch(`${API_URL}/api/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, userId }),

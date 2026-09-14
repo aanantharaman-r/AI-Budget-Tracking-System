@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_URL } from "./config/api";
 
 function BackendTest() {
   const [budget, setBudget] = useState(null);
@@ -8,7 +9,7 @@ function BackendTest() {
 
   // GET - Backend-la irundhu data edukkum
   useEffect(() => {
-    fetch("http://localhost:5000/api/budget")
+    fetch(`${API_URL}/api/budget`)
       .then((response) => response.json())
       .then((data) => {
         setBudget(data);
@@ -20,7 +21,7 @@ function BackendTest() {
 
   // POST - Frontend-la irundhu backend-ku data anuppum
   const saveBudget = () => {
-    fetch("http://localhost:5000/api/budget", {
+    fetch(`${API_URL}/api/budget`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

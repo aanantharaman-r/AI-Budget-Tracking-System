@@ -15,9 +15,9 @@ import {
 
 import { computeStats } from '../lib/utils'
 
-const BudgetContext = createContext(null)
+import { API_URL } from '../config/api'
 
-const API_URL = ''
+const BudgetContext = createContext(null)
 
 export function BudgetProvider({ children }) {
   const [transactions, setTransactions] = useState([])
